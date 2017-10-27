@@ -7,13 +7,25 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 
 class PatreonProvider extends AbstractProvider
 {
+    use BearerAuthorizationTrait;
+
+    /**
+     * @var string
+     */
     protected $apiBaseUrl = 'https://www.patreon.com/api/oauth2/';
+    /**
+     * @var string
+     */
     protected $oauthBaseUrl = 'https://www.patreon.com/oauth2/';
 
+    /**
+     * @var array
+     */
     protected $scopes = [
         'users', 'pledges-to-me', 'my-campaign'
     ];
@@ -115,24 +127,5 @@ class PatreonProvider extends AbstractProvider
     protected function createResourceOwner(array $response, AccessToken $token)
     {
         return new Patron($response['data']);
-    }
-
-    /**
-     * Returns the authorization headers used by this provider.
-     *
-     * Typically this is "Bearer" or "MAC". For more information see:
-     * http://tools.ietf.org/html/rfc6749#section-7.1
-     *
-     * No default is provided, providers must overload this method to activate
-     * authorization headers.
-     *
-     * @param  mixed|null $token Either a string or an access token instance
-     * @return array
-     */
-    protected function getAuthorizationHeaders($token = null)
-    {
-        return [
-            'Authorization' => "Bearer $token"
-        ];
     }
 }
