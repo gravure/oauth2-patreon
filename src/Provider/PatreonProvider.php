@@ -14,6 +14,7 @@ class PatreonProvider extends AbstractProvider
     protected $oauthBaseUrl = 'https://www.patreon.com/oauth2/';
 
     protected $scopes = [
+        'users', 'pledges-to-me', 'my-campaign'
     ];
 
     /**
@@ -62,7 +63,7 @@ class PatreonProvider extends AbstractProvider
      */
     protected function getDefaultScopes()
     {
-        return [];
+        return $this->scopes;
     }
 
     /**
