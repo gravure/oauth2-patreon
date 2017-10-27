@@ -2,6 +2,7 @@
 
 namespace Gravure\Patreon\Oauth\Provider;
 
+use Gravure\Patreon\Oauth\Resources\Patron;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
@@ -63,7 +64,7 @@ class PatreonProvider extends AbstractProvider
      */
     protected function getDefaultScopes()
     {
-        return $this->scopes;
+        return ['users'];
     }
 
     /**
@@ -76,7 +77,31 @@ class PatreonProvider extends AbstractProvider
      */
     protected function checkResponse(ResponseInterface $response, $data)
     {
-        // TODO: Implement checkResponse() method.
+        $error = null;
+
+        if (isset($data['error'])) {
+            $error['detail'] = $data['error'];
+            $error['code'] = 401;
+        }
+        if (isset($data['errors']) && count($data['errors'])) {
+            $error = array_shift($data['errors']);
+        }
+
+        if ($error) {
+            throw new IdentityProviderException(
+                $error['detail'],
+                $error['code'],
+                $response
+            );
+        }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getScopeSeparator()
+    {
+        return ' ';
     }
 
     /**
@@ -89,6 +114,6 @@ class PatreonProvider extends AbstractProvider
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
-        // TODO: Implement createResourceOwner() method.
+        return new Patron($response['data']);
     }
 }
