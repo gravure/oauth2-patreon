@@ -15,6 +15,11 @@ class PatreonProvider extends AbstractProvider
     use BearerAuthorizationTrait;
 
     /**
+     * @var string Key used in the access token response to identify the resource owner.
+     */
+    const ACCESS_TOKEN_RESOURCE_OWNER_ID = 'id';
+
+    /**
      * @var string
      */
     protected $apiBaseUrl = 'https://www.patreon.com/api/oauth2/';
