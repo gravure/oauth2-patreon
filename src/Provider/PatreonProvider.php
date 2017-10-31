@@ -2,6 +2,7 @@
 
 namespace Gravure\Patreon\Oauth\Provider;
 
+use Gravure\Patreon\Oauth\Resources\Factory;
 use Gravure\Patreon\Oauth\Resources\Patron;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -127,10 +128,10 @@ class PatreonProvider extends AbstractProvider
      *
      * @param  array $response
      * @param  AccessToken $token
-     * @return ResourceOwnerInterface
+     * @return ResourceOwnerInterface|Patron
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
-        return new Patron($response['data']);
+        return Factory::create((array) $response);
     }
 }

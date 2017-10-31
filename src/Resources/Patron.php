@@ -4,18 +4,34 @@ namespace Gravure\Patreon\Oauth\Resources;
 
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 
-class Patron implements ResourceOwnerInterface
+/**
+ * Class Patron
+ * @package Gravure\Patreon\Oauth\Resources
+ * @property string $about
+ * @property string $created
+ * @property int $discord_id
+ * @property string $email
+ * @property string $facebook
+ * @property string $facebook_id
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $full_name
+ * @property int $gender
+ * @property bool $has_password
+ * @property string $thumb_url
+ * @property string $image_url
+ * @property bool $is_deleted
+ * @property bool $is_email_verified
+ * @property bool $is_nuked
+ * @property bool $is_suspended
+ * @property array $social_connections
+ * @property string $twitter
+ * @property string $url
+ * @property string $vanity
+ * @property string $youtube
+ */
+class Patron extends Resource implements ResourceOwnerInterface
 {
-    protected $id;
-
-    protected $attributes = [];
-
-    public function __construct(array $data)
-    {
-        $this->id = $data['id'];
-        $this->attributes = $data['attributes'];
-    }
-
     /**
      * Returns the identifier of the authorized resource owner.
      *
@@ -27,31 +43,11 @@ class Patron implements ResourceOwnerInterface
     }
 
     /**
-     * Return all of the owner details available as an array.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return array_merge([
-            'id' => $this->id
-        ], $this->attributes);
-    }
-
-    /**
      * @return string
      */
-    public function getEmail()
+    public function getUsername()
     {
-        return $this->attributes['email'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->attributes['full_name'];
+        return $this->attributes['vanity'];
     }
 
     /**
@@ -63,10 +59,15 @@ class Patron implements ResourceOwnerInterface
     }
 
     /**
-     * @return string
+     * Return all of the owner details available as an array.
+     *
+     * @return array
      */
-    public function getUsername()
+    public function toArray()
     {
-        return $this->attributes['vanity'];
+        return array_merge([
+            'id' => $this->id,
+            'type' => $this->type,
+        ], $this->attributes);
     }
 }
