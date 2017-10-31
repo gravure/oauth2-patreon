@@ -20,9 +20,9 @@ class Factory
      */
     public static function create(array $payload)
     {
-        $data = $payload['data'];
+        $data = array_key_exists('data', $payload) ? $payload['data'] : $payload;
         $type = $data['type'];
-        $included = $payload['included'];
+        $included = array_key_exists('included', $payload) ? $payload['included'] : [];
 
         if (false === array_key_exists($type, static::$mapping)) {
             throw new InvalidResourceException("Resource type $type not mapped.");
@@ -36,14 +36,25 @@ class Factory
         $resource->type = $type;
         $resource->attributes = $data['attributes'];
 
-        if (isset($data['relationships']['data'])) {
-            foreach ($data['relationships']['data'] as $relationship) {
+        if (isset($data['relationships'])) {
+            foreach ($data['relationships'] as $type => $relationship) {
+                if (!is_array($relationship['data'])) {
+                    $relationship['data'] = (array) $relationship['data'];
+                }
 
-                dd($relationship);
-                array_push(
-                    $resource->relationships,
-                    static::retrieveIncluded($relationship['type'], $relationship['id'], $included)
-                );
+                $resource->relationships[$type] = [];
+
+                foreach ($relationship['data'] as $relation) {
+                    if (! isset($relation['type'], $relation['id'])) {
+                        continue;
+                    }
+
+                    array_push(
+                        $resource->relationships[$type],
+                        static::retrieveIncluded($relation['type'], $relation['id'], $included)
+                    );
+                }
+
             }
         }
 
