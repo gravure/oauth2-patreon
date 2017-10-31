@@ -7,13 +7,30 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 
 class PatreonProvider extends AbstractProvider
 {
-    protected $apiBaseUrl = 'https://api.patreon.com/oauth2/';
+    use BearerAuthorizationTrait;
+
+    /**
+     * @var string Key used in the access token response to identify the resource owner.
+     */
+    const ACCESS_TOKEN_RESOURCE_OWNER_ID = 'id';
+
+    /**
+     * @var string
+     */
+    protected $apiBaseUrl = 'https://www.patreon.com/api/oauth2/';
+    /**
+     * @var string
+     */
     protected $oauthBaseUrl = 'https://www.patreon.com/oauth2/';
 
+    /**
+     * @var array
+     */
     protected $scopes = [
         'users', 'pledges-to-me', 'my-campaign'
     ];

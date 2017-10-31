@@ -61,4 +61,12 @@ class Patron implements ResourceOwnerInterface
     {
         return $this->attributes['image_url'];
     }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->attributes['vanity'];
+    }
 }
