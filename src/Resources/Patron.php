@@ -5,8 +5,6 @@ namespace Gravure\Patreon\Oauth\Resources;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 
 /**
- * Class Patron
- * @package Gravure\Patreon\Oauth\Resources
  * @property string $about
  * @property string $created
  * @property int $discord_id
