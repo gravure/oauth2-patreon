@@ -21,7 +21,7 @@ composer require gravure/oauth2-patreon
 Usage is the same for every League OAuth client provider, using the following provider:
 
 ```php
-Gravure\Patreon\Oauth\Provider\PatreonProvider
+Gravure\Patreon\Oauth\Provider\Patreon
 ```
 
 ## Support our work

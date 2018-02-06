@@ -23,6 +23,7 @@ class Factory
         $data = array_key_exists('data', $payload) ? $payload['data'] : $payload;
         $type = $data['type'];
         $included = array_key_exists('included', $payload) ? $payload['included'] : [];
+        $relationships = array_key_exists('relationships', $payload) ? $payload['included'] : [];
 
         if (false === array_key_exists($type, static::$mapping)) {
             throw new InvalidResourceException("Resource type $type not mapped.");
@@ -36,26 +37,24 @@ class Factory
         $resource->type = $type;
         $resource->attributes = $data['attributes'];
 
-        if (isset($data['relationships'])) {
-            foreach ($data['relationships'] as $type => $relationship) {
-                if (!is_array($relationship['data'])) {
-                    $relationship['data'] = (array) $relationship['data'];
-                }
-
-                $resource->relationships[$type] = [];
-
-                foreach ($relationship['data'] as $relation) {
-                    if (! isset($relation['type'], $relation['id'])) {
-                        continue;
-                    }
-
-                    array_push(
-                        $resource->relationships[$type],
-                        static::retrieveIncluded($relation['type'], $relation['id'], $included)
-                    );
-                }
-
+        foreach ($relationships as $type => $relationship) {
+            if (!is_array($relationship['data'])) {
+                $relationship['data'] = (array) $relationship['data'];
             }
+
+            $resource->relationships[$type] = [];
+
+            foreach ($relationship['data'] as $relation) {
+                if (! isset($relation['type'], $relation['id'])) {
+                    continue;
+                }
+
+                array_push(
+                    $resource->relationships[$type],
+                    static::retrieveIncluded($relation['type'], $relation['id'], $included)
+                );
+            }
+
         }
 
         return $resource;

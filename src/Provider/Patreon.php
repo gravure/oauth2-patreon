@@ -72,6 +72,13 @@ class Patreon extends AbstractProvider
         return $this->apiBaseUrl . 'api/current_user';
     }
 
+    protected function getAuthorizationHeaders($token = null)
+    {
+        return $token ? [
+            'Authorization' => 'Bearer ' . $token
+        ] : [];
+    }
+
     /**
      * Returns the default scopes used by this provider.
      *
